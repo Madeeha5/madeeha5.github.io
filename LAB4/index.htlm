@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Madeeha's Online Store</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            text-align: center;
+            padding: 40px;
+        }
+        h1 {
+            color: #007BFF;
+        }
+        .order-summary {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            display: inline-block;
+            padding: 20px;
+            margin-top: 20px;
+            text-align: left;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Welcome to Madeeha’s Store!</h1>
+    <div id="orderDetails" class="order-summary"></div>
+
+    <script>
+        // 1. Welcome alert
+        alert("Welcome to Madeeha’s Store!");
+
+        // 2. Prompt for name, item, quantity
+        const name = prompt("What is your name?");
+        const item = prompt("What item would you like to order?");
+        let quantity = prompt("How many would you like to order? (1-99)");
+
+        // Ensure quantity is between 1–99
+        quantity = parseInt(quantity);
+        if (isNaN(quantity) || quantity < 1 || quantity > 99) {
+            alert("Please enter a valid number between 1 and 99.");
+            quantity = 1; // default value
+        }
+
+        // 3. Greet customer appropriately based on time
+        const hour = new Date().getHours();
+        let greeting;
+        if (hour < 12) {
+            greeting = "Good morning";
+        } else if (hour < 18) {
+            greeting = "Good afternoon";
+        } else {
+            greeting = "Good evening";
+        }
+
+        // 4. Calculate delivery date (7 days from now)
+        const today = new Date();
+        const arrival = new Date(today);
+        arrival.setDate(today.getDate() + 7);
+
+        // Format the arrival date
+        const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const arrivalDate = arrival.toLocaleDateString('en-US', options);
+
+        // 5. Display order details on the website
+        document.getElementById("orderDetails").innerHTML = `
+            <h2>${greeting}, ${name}!</h2>
+            <p>Thank you for ordering from Madeeha’s Store.</p>
+            <p><strong>Item Ordered:</strong> ${item}</p>
+            <p><strong>Quantity:</strong> ${quantity}</p>
+            <p>Your order will arrive on <strong>${arrivalDate}</strong>.</p>
+        `;
+    </script>
+</body>
+</html>
