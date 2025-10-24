@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<head>
+    <title> Air Field Registration </title>
+   
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+ 
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+
+    <script>
+        function submitForm(){
+            var elements = document.getElementById("myForm").elements;
+            var elemArr1 = Array.from(elements);
+            var submission = {};
+            elemArr1.forEach((element) => {
+                if (element.name){
+                    submission[element.name] = element.value;
+                }
+            });
+            var p = submission["Pass"] || "";
+            var correctpassword = p.includes("!") || p.includes("?");
+
+            submission["Pass"] = "*".repeat(p.length);
+       
+            var approval;
+            if (correctpassword){
+                approval = "<strong>Submission Successful!</strong>";
+            } else {
+                approval = "<strong>Submission Unsuccessful! Password must contain ! and ? </strong>";    
+            }
+
+            var demo = `
+                ${approval}<br>
+                First Name: ${submission["fname"] || ""}<br>
+                Last Name: ${submission["lname"] || ""}<br>
+                Date of Birth: ${submission["fdate"] || ""}<br>
+                Email: ${submission["email"] || ""}<br>
+                Password: ${submission["Pass"]}
+            `;
+           
+            document.getElementById("demo").innerHTML = demo;
+        }
+    </script>
+</head>
+<body>
+    <div class="container text-center">
+        <h1 class="my-4"> Air Field Registration </h1>
+        <div class="card" style="width: 18rem; margin: 0 auto;">
+            <img src="image/airplanes.jpg" class="card-img-top">
+            <div class="card-body">
+                <p class="card-text">Air plane docking station.</p>
+            </div>
+        </div>
+           
+        <form id="myForm">
+            First Name: <input type="text" name="fname"><br>
+            Last Name: <input type="text" name="lname"><br>
+            Date of Birth: <input type="text" name="fdate"><br>
+            Email Id: <input type="text" name="email"><br>
+            Password: <input type="text" name="Pass"><br>
+        </form>
+
+        <button class="btn btn-primary mt-3" onclick="submitForm()">Submit</button>
+        <p class="mt-2">Password must contain ! and ?</p>
+        <p>Click submit and try me</p>
+        <p id="demo"></p>
+    </div>
+
+    <hr class="horizontal rule">
+    <span>10/26/2025 - Madeeha Kanwal</span>
+    <hr class="horizontal rule">
+</body>
+</html>
