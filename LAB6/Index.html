@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cat Facts</title>
+    <style>
+        /* Basic styling to make the page look clean and centered */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fefefe;
+            text-align: center;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        button {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            margin-top: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #e68a00;
+        }
+
+        img {
+            margin-top: 20px;
+            width: 300px;
+            border-radius: 10px;
+        }
+
+        table {
+            margin: 30px auto;
+            border-collapse: collapse;
+            width: 80%;
+            max-width: 600px;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #ff9800;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+<body>
+    <h1>🐾 Cat Facts</h1>
+    <p>Click the button below to load some fun cat facts!</p>
+
+    <!-- Button to load data from REST API -->
+    <button onclick="loadCatFacts()">Load Cat Facts</button>
+
+    <!-- Default image before API call -->
+    <div>
+        <img id="catImage" src="image/mycat.jpg" alt="My Cat">
+    </div>
+
+    <!-- Table to show data from the API -->
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Fact</th>
+            </tr>
+        </thead>
+        <tbody id="factsTable"></tbody>
+    </table>
+
+    <script>
+        // Function to fetch and display cat facts from REST API
+        async function loadCatFacts() {
+            const apiUrl = 'https://brianobruno.github.io/cats.json';
+
+            try {
+                // Fetch data from the API
+                const response = await fetch(apiUrl);
+                const data = await response.json();
+
+                // Update image with the one from the API
+                document.getElementById("catImage").src = data.image;
+
+                // Sort facts by factId
+                const sortedFacts = data.facts.sort((a, b) => a.factId - b.factId);
+
+                // Display facts in the table
+                const tableBody = document.getElementById("factsTable");
+                tableBody.innerHTML = ""; // clear old data
+
+                sortedFacts.forEach(fact => {
+                    const row = `<tr>
+                                    <td>${fact.factId}</td>
+                                    <td>${fact.text}</td>
+                                 </tr>`;
+                    tableBody.innerHTML += row;
+                });
+
+            } catch (error) {
+                console.error("Error fetching cat facts:", error);
+                alert("Something went wrong while loading cat facts. Please try again.");
+            }
+        }
+    </script>
+</body>
+</html>
