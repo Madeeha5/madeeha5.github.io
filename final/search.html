@@ -8,65 +8,23 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --primary-color: #c77dff;
-      --secondary-color: #e0aaff;
-      --accent-color: #9d4edd;
-      --bg-light: #faf9f6;
-      --text-dark: #2b2d42;
-      --text-muted: #6c757d;
-    }
-
-    [data-theme="dark"] {
-      --primary-color: #b794f6;
-      --secondary-color: #d4a5f3;
-      --accent-color: #9d72e7;
-      --bg-light: #1a1a1a;
-      --text-dark: #e8e8e8;
-      --text-muted: #a0a0a0;
-    }
-
     body {
       font-family: 'Lato', sans-serif;
-      background-color: var(--bg-light);
-      color: var(--text-dark);
-      transition: all 0.3s ease;
-    }
-
-    [data-theme="dark"] body {
-      background-color: #1a1a1a;
-    }
-
-    [data-theme="dark"] .navbar,
-    [data-theme="dark"] .search-section,
-    [data-theme="dark"] footer {
-      background-color: #242424 !important;
-      border-color: #3a3a3a !important;
-    }
-
-    [data-theme="dark"] .card {
-      background-color: #2a2a2a;
-      border-color: #3a3a3a;
-    }
-
-    [data-theme="dark"] .form-select,
-    [data-theme="dark"] .form-control {
-      background-color: #2a2a2a;
-      color: var(--text-dark);
-      border-color: #3a3a3a;
+      background-color: #faf9f6;
+      color: #2b2d42;
     }
 
     h1, h2, .section-title {
       font-family: 'Playfair Display', serif;
       font-weight: 600;
-      color: var(--text-dark);
+      color: #2b2d42;
     }
 
     .navbar-brand {
       font-family: 'Playfair Display', serif;
       font-weight: 600;
       font-size: 1.5rem;
-      color: var(--accent-color) !important;
+      color: #9d4edd !important;
     }
 
     .search-section {
@@ -77,13 +35,13 @@
     }
 
     .btn-primary {
-      background-color: var(--accent-color);
-      border-color: var(--accent-color);
+      background-color: #9d4edd;
+      border-color: #9d4edd;
     }
 
     .btn-primary:hover {
-      background-color: var(--primary-color);
-      border-color: var(--primary-color);
+      background-color: #c77dff;
+      border-color: #c77dff;
     }
 
     .card {
@@ -105,20 +63,16 @@
       background-color: #f8f9fa;
     }
 
-    [data-theme="dark"] .card-img-top {
-      background-color: #333;
-    }
-
     .price-tag {
       font-size: 1.25rem;
       font-weight: 600;
-      color: var(--accent-color);
+      color: #9d4edd;
     }
 
     .product-brand {
       text-transform: capitalize;
       font-weight: 600;
-      color: var(--text-muted);
+      color: #6c757d;
       font-size: 0.875rem;
     }
 
@@ -126,14 +80,10 @@
       text-transform: capitalize;
     }
 
-    #themeToggle {
-      color: var(--text-dark);
-    }
-
     .filter-label {
       font-weight: 500;
       margin-bottom: 0.5rem;
-      color: var(--text-dark);
+      color: #2b2d42;
     }
   </style>
 </head>
@@ -155,9 +105,6 @@
             <a class="nav-link active" href="search.html">Browse Products</a>
           </li>
         </ul>
-        <button id="themeToggle" class="btn btn-link ms-3" onclick="toggleTheme()">
-          <i id="themeIcon" class="bi bi-moon-fill"></i>
-        </button>
       </div>
     </div>
   </nav>
@@ -234,37 +181,12 @@
   <script>
     const API_BASE = 'https://makeup-api.herokuapp.com/api/v1/products.json';
 
-    function toggleTheme() {
-      const body = document.body;
-      const icon = document.getElementById('themeIcon');
-      
-      if (body.getAttribute('data-theme') === 'dark') {
-        body.removeAttribute('data-theme');
-        icon.className = 'bi bi-moon-fill';
-        sessionStorage.setItem('theme', 'light');
-      } else {
-        body.setAttribute('data-theme', 'dark');
-        icon.className = 'bi bi-sun-fill';
-        sessionStorage.setItem('theme', 'dark');
-      }
-    }
-
-    function loadTheme() {
-      const savedTheme = sessionStorage.getItem('theme');
-      const icon = document.getElementById('themeIcon');
-      
-      if (savedTheme === 'dark') {
-        document.body.setAttribute('data-theme', 'dark');
-        if (icon) icon.className = 'bi bi-sun-fill';
-      }
-    }
-
     function formatPrice(price) {
-      return price ? `$${parseFloat(price).toFixed(2)}` : 'Price N/A';
+      return price ? `${parseFloat(price).toFixed(2)}` : 'Price N/A';
     }
 
     function createProductCard(product) {
-      const imageUrl = product.image_link || 'https://via.placeholder.com/200?text=No+Image';
+      const imageUrl = product.image_link || '';
       const brand = product.brand || 'Unknown Brand';
       const name = product.name || 'Unnamed Product';
       const price = formatPrice(product.price);
@@ -273,7 +195,13 @@
       return `
         <div class="col">
           <div class="card">
-            <img src="${imageUrl}" class="card-img-top" alt="${name}" onerror="this.src='https://via.placeholder.com/200?text=No+Image'">
+            <div class="card-img-top-wrapper position-relative">
+              <img src="${imageUrl}" class="card-img-top" alt="${name}" 
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="card-img-placeholder" style="display: none; height: 200px; align-items: center; justify-content: center; background-color: #f8f9fa;">
+                <i class="bi bi-question-circle" style="font-size: 4rem; color: #6c757d;"></i>
+              </div>
+            </div>
             <div class="card-body">
               <p class="product-brand mb-1">${brand}</p>
               <h6 class="card-title">${name}</h6>
@@ -347,7 +275,7 @@
     }
 
     function initPage() {
-      loadTheme();
+      // Page initialization
     }
   </script>
 </body>
