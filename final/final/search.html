@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Beauty Browse - Browse Products</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Lato:wght@300;400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Lato', sans-serif;
+      background-color: #faf9f6;
+      color: #2b2d42;
+    }
+
+    h1, h2, .section-title {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      color: #2b2d42;
+    }
+
+    .navbar-brand {
+      font-family: 'Playfair Display', serif;
+      font-weight: 600;
+      font-size: 1.5rem;
+      color: #9d4edd !important;
+    }
+
+    .search-section {
+      background-color: white;
+      padding: 3rem 0;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    .btn-primary {
+      background-color: #9d4edd;
+      border-color: #9d4edd;
+    }
+
+    .btn-primary:hover {
+      background-color: #c77dff;
+      border-color: #c77dff;
+    }
+
+    .card {
+      border: none;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: transform 0.2s;
+      height: 100%;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+
+    .card-img-top {
+      height: 200px;
+      object-fit: contain;
+      padding: 1rem;
+      background-color: #f8f9fa;
+    }
+
+    .price-tag {
+      font-size: 1.25rem;
+      font-weight: 600;
+      color: #9d4edd;
+    }
+
+    .product-brand {
+      text-transform: capitalize;
+      font-weight: 600;
+      color: #6c757d;
+      font-size: 0.875rem;
+    }
+
+    .badge {
+      text-transform: capitalize;
+    }
+
+    .filter-label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #2b2d42;
+    }
+  </style>
+</head>
+<body onload="initPage()">
+  <nav class="navbar navbar-expand-lg navbar-light bg-white sticky-top border-bottom">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">
+        <i class="bi bi-stars me-2"></i>Beauty Browse
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="search.html">Browse Products</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <div class="search-section">
+    <div class="container">
+      <h1 class="text-center mb-4">Browse Products</h1>
+      
+      <div class="row g-3">
+        <div class="col-md-5">
+          <label class="filter-label">Brand</label>
+          <select id="brandSelect" class="form-select">
+            <option value="">All Brands</option>
+            <option value="maybelline">Maybelline</option>
+            <option value="covergirl">CoverGirl</option>
+            <option value="nyx">NYX</option>
+            <option value="revlon">Revlon</option>
+            <option value="l'oreal">L'Oreal</option>
+            <option value="essence">Essence</option>
+            <option value="wet n wild">Wet n Wild</option>
+            <option value="milani">Milani</option>
+          </select>
+        </div>
+        
+        <div class="col-md-5">
+          <label class="filter-label">Product Type</label>
+          <select id="typeSelect" class="form-select">
+            <option value="">All Types</option>
+            <option value="lipstick">Lipstick</option>
+            <option value="lip_liner">Lip Liner</option>
+            <option value="foundation">Foundation</option>
+            <option value="eyeliner">Eyeliner</option>
+            <option value="eyeshadow">Eyeshadow</option>
+            <option value="mascara">Mascara</option>
+            <option value="blush">Blush</option>
+            <option value="bronzer">Bronzer</option>
+            <option value="nail_polish">Nail Polish</option>
+          </select>
+        </div>
+        
+        <div class="col-md-2 d-flex align-items-end">
+          <button class="btn btn-primary w-100" onclick="searchProducts()">
+            <i class="bi bi-search me-2"></i>Search
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container my-5">
+    <div id="loading" class="text-center my-5 d-none">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-3 text-muted">Searching products...</p>
+    </div>
+
+    <div id="error" class="alert alert-danger d-none"></div>
+    
+    <div id="resultsInfo" class="mb-3 d-none">
+      <p class="text-muted"><span id="resultCount">0</span> products found</p>
+    </div>
+    
+    <div id="productGrid" class="row row-cols-1 row-cols-md-3 row-cols-lg-4 g-4"></div>
+  </div>
+
+  <footer class="bg-light py-4 mt-5 border-top">
+    <div class="container text-center">
+      <p class="text-muted mb-0">Beauty Browse &copy; 2025 | Powered by Makeup API</p>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    const API_BASE = 'https://makeup-api.herokuapp.com/api/v1/products.json';
+
+    function formatPrice(price) {
+      return price ? `${parseFloat(price).toFixed(2)}` : 'Price N/A';
+    }
+
+    function createProductCard(product) {
+      const imageUrl = product.image_link || '';
+      const brand = product.brand || 'Unknown Brand';
+      const name = product.name || 'Unnamed Product';
+      const price = formatPrice(product.price);
+      const type = product.product_type ? product.product_type.replace('_', ' ') : 'Product';
+
+      return `
+        <div class="col">
+          <div class="card">
+            <div class="card-img-top-wrapper position-relative">
+              <img src="${imageUrl}" class="card-img-top" alt="${name}" 
+                   onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="card-img-placeholder" style="display: none; height: 200px; align-items: center; justify-content: center; background-color: #f8f9fa;">
+                <i class="bi bi-question-circle" style="font-size: 4rem; color: #6c757d;"></i>
+              </div>
+            </div>
+            <div class="card-body">
+              <p class="product-brand mb-1">${brand}</p>
+              <h6 class="card-title">${name}</h6>
+              <p class="text-muted small mb-2"><span class="badge bg-secondary">${type}</span></p>
+              <p class="price-tag mb-0">${price}</p>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function searchProducts() {
+      const brand = document.getElementById('brandSelect').value;
+      const type = document.getElementById('typeSelect').value;
+      const loading = document.getElementById('loading');
+      const error = document.getElementById('error');
+      const grid = document.getElementById('productGrid');
+      const resultsInfo = document.getElementById('resultsInfo');
+      const resultCount = document.getElementById('resultCount');
+
+      // Build query parameters
+      let url = API_BASE;
+      const params = [];
+      if (brand) params.push(`brand=${encodeURIComponent(brand)}`);
+      if (type) params.push(`product_type=${encodeURIComponent(type)}`);
+      
+      if (params.length > 0) {
+        url += '?' + params.join('&');
+      }
+
+      // Show loading
+      loading.classList.remove('d-none');
+      error.classList.add('d-none');
+      resultsInfo.classList.add('d-none');
+      grid.innerHTML = '';
+
+      fetch(url)
+        .then(response => response.json())
+        .then(data => {
+          loading.classList.add('d-none');
+
+          if (!data || data.length === 0) {
+            error.textContent = 'No products found matching your criteria. Try different filters.';
+            error.classList.remove('d-none');
+            return;
+          }
+
+          // Filter out products with no image or no price
+          const filteredData = data.filter(product => {
+            const hasImage = product.image_link && product.image_link.trim() !== '';
+            const hasPrice = product.price && product.price !== '0.0' && product.price !== 0;
+            return hasImage && hasPrice;
+          });
+
+          if (filteredData.length === 0) {
+            error.textContent = 'No products found matching your criteria. Try different filters.';
+            error.classList.remove('d-none');
+            return;
+          }
+
+          resultCount.textContent = filteredData.length;
+          resultsInfo.classList.remove('d-none');
+          grid.innerHTML = filteredData.map(product => createProductCard(product)).join('');
+        })
+        .catch(err => {
+          loading.classList.add('d-none');
+          error.textContent = 'Failed to load products. Please try again later.';
+          error.classList.remove('d-none');
+          console.error('Error:', err);
+        });
+    }
+
+    function initPage() {
+      // Page initialization
+    }
+  </script>
+</body>
+</html>
